@@ -13,8 +13,17 @@ RUN npm install
 # Copia el resto de la aplicación
 COPY . .
 
+# Copiar el script de entrada
+COPY start.sh /usr/local/bin/start.sh
+
+# Hacer el script ejecutable
+RUN chmod +x /usr/local/bin/start.sh
+
+# Hacer ejecutable el script de inicio
+RUN chmod +x start.sh
+
 # Expone el puerto en el que la aplicación se ejecutará
 EXPOSE 3000
 
-# Comando para iniciar la aplicación
-CMD ["npm", "start"]
+# Configurar el script de entrada
+ENTRYPOINT ["start.sh"]

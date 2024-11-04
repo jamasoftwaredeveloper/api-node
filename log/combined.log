@@ -1,0 +1,8 @@
+{"level":"info","message":"GET /users/error-test"}
+{"level":"error","message":"Este es un error de prueba"}
+{"level":"info","message":"GET /"}
+{"level":"info","message":"GET /swagger-ui.css"}
+{"level":"info","message":"GET /swagger-ui-standalone-preset.js"}
+{"level":"info","message":"GET /swagger-ui-init.js"}
+{"level":"info","message":"GET /swagger-ui-bundle.js"}
+{"level":"info","message":"GET /favicon-32x32.png"}

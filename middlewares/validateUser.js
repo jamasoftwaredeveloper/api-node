@@ -3,7 +3,31 @@ const { body, param, query, validationResult } = require('express-validator');
 // Middleware de validación para las operaciones de usuario
 exports.validateUser = {
   // Validación para crear y actualizar usuario
-  createAndUpdate: [
+  create: [
+    body('_id')
+      .isNumeric()
+      .withMessage('El id debe ser un número.')
+      .isInt({ min: 1 }),
+    body('username')
+      .isString()
+      .withMessage('El nombre de usuario debe ser una cadena.')
+      .isLength({ min: 3 })
+      .withMessage('El nombre de usuario debe tener al menos 3 caracteres.'),
+    body('email')
+      .isEmail()
+      .withMessage('Debe proporcionar un correo electrónico válido.')
+      .normalizeEmail(),
+    (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      next();
+    },
+  ],
+
+  update: [
+    param('id'),
     body('username')
       .isString()
       .withMessage('El nombre de usuario debe ser una cadena.')

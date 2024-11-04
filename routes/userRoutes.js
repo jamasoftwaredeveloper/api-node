@@ -34,11 +34,14 @@ router.get('/', validateUser.listUsers, getUsers);
  *           schema:
  *             type: object
  *             properties:
+ *               _id:
+ *                 type: number
  *               username:
  *                 type: string
  *               email:
  *                 type: string
  *             required:
+ *               - _id
  *               - username
  *               - email
  *     responses:
@@ -47,7 +50,7 @@ router.get('/', validateUser.listUsers, getUsers);
  *       400:
  *         description: Solicitud incorrecta
  */
-router.post('/create', validateUser.createAndUpdate, createUser);
+router.post('/create', validateUser.create, createUser);
 
 /**
  * @swagger
@@ -61,7 +64,7 @@ router.post('/create', validateUser.createAndUpdate, createUser);
  *         required: true
  *         description: ID del usuario a actualizar
  *         schema:
- *           type: string
+ *           type: number
  *     requestBody:
  *       required: true
  *       content:
@@ -84,7 +87,7 @@ router.post('/create', validateUser.createAndUpdate, createUser);
  *       400:
  *         description: Solicitud incorrecta
  */
-router.put('/update/:id', validateUser.createAndUpdate, updateUser);
+router.put('/update/:id', validateUser.update, updateUser);
 
 /**
  * @swagger

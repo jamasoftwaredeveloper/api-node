@@ -1,88 +1,59 @@
-const User = require('../models/User');
+const userService = require('../services/userService');
 
-// Obtener todos los usuarios
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('username email');
+    const users = await userService.getUsers();
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuarios', error: error.message });
   }
 };
 
-// Crear un nuevo usuario
 exports.createUser = async (req, res) => {
-  const { username, email } = req.body;
+  const { _id, username, email } = req.body;
 
   if (!username || !email) {
     return res.status(400).json({ message: 'Username y email son requeridos' });
   }
 
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({ message: 'El email ya está en uso' });
-    }
-
-    const newUser = new User({ username, email });
-    await newUser.save();
-
-    res.status(201).json({ username: newUser.username, email: newUser.email });
+    const user = await userService.createUser(_id, username, email);
+    res.status(201).json({ username: user.username, email: user.email });
   } catch (error) {
-    res.status(500).json({ message: 'Error al crear usuario', error: error.message });
+    res.status(error.message === 'El email ya está en uso' ? 409 : 500).json({ message: error.message });
   }
 };
 
-// Actualizar un usuario existente
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const { username, email } = req.body;
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { username, email },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-
-    res.status(200).json({ username: updatedUser.username, email: updatedUser.email });
+    const user = await userService.updateUser(id, username, email);
+    res.status(200).json({ username: user.username, email: user.email });
   } catch (error) {
-    res.status(500).json({ message: 'Error al actualizar usuario', error: error.message });
+    res.status(error.message === 'Usuario no encontrado' ? 404 : 500).json({ message: error.message });
   }
 };
 
-// Ver un usuario por ID
 exports.showUser = async (req, res) => {
   const { id } = req.params;
   
   try {
-    const user = await User.findById(id);
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
+    const user = await userService.showUser(id);
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Error al obtener usuario', error: error.message });
+    res.status(error.message === 'Usuario no encontrado' ? 404 : 500).json({ message: error.message });
   }
 };
 
-// Eliminar un usuario existente
 exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-    
+  
   try {
-    const deletedUser = await User.findByIdAndDelete(id);
-
-    if (!deletedUser) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-
-    res.status(204).send(); // No hay contenido que devolver
+    await userService.deleteUser(id);
+    res.status(204).send();
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar usuario', error: error.message });
+    res.status(error.message === 'Usuario no encontrado' ? 404 : 500).json({ message: error.message });
   }
 };

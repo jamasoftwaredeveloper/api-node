@@ -1,4 +1,6 @@
+const logger = require('../utils/logger');
+
 module.exports = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Algo salió mal!');
-  };
+  logger.error(err.message || 'Un error ocurrió'); // Registrar el error
+  res.status(500).send('Algo salió mal!', err.message);
+};

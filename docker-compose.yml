@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongo:
     image: mongo:latest
@@ -19,7 +17,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      MONGO_URI: mongodb://root:api-node@mongo:27017/api-node?authSource=admin
+      MONGO_URI: mongodb://root:api-node@localhost:27017/api-node?authSource=admin
     depends_on:
       - mongo
 
