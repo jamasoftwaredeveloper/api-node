@@ -1,0 +1,5 @@
+# Archivos de texto (con LF para Unix/Linux)
+*.sh text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.md text eol=lf
