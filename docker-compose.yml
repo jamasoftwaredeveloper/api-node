@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"   # Expone el puerto para MongoDB
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: api-node
+    volumes:
+      - mongo-data:/data/db   # Persiste los datos en una carpeta de volumen
+  node-app:
+    build:
+      context: .             # Ubicación del Dockerfile para construir la aplicación
+      dockerfile: Dockerfile
+    container_name: node-app
+    ports:
+      - "3000:3000"
+    environment:
+      MONGO_URI: mongodb://root:api-node@mongo:27017/api-node?authSource=admin
+    depends_on:
+      - mongo
+
+volumes:
+  mongo-data: # Volumen para persistencia de datos de MongoDB
