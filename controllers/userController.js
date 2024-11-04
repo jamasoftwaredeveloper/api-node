@@ -1,33 +1,35 @@
-const User = require('../models/User'); // Asegúrate de tener tu modelo de usuario
+const User = require('../models/User');
 
 // Obtener todos los usuarios
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find().select('username,email');
-    res.json(users);
+    const users = await User.find().select('username email');
+    res.status(200).json(users);
   } catch (error) {
-    res.status(500).send('Error al obtener usuarios');
+    res.status(500).json({ message: 'Error al obtener usuarios', error: error.message });
   }
 };
 
 // Crear un nuevo usuario
 exports.createUser = async (req, res) => {
-  const { username, email, _id } = req.body;
+  const { username, email } = req.body;
 
-  // Validar que se proporcionen los campos requeridos
   if (!username || !email) {
     return res.status(400).json({ message: 'Username y email son requeridos' });
   }
 
   try {
-    const user = await User.findOne({ _id, username, email });
-    if (!user) {
-      const newUser = new User({ _id, username, email });
-      await newUser.save();
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'El email ya está en uso' });
     }
-    res.status(201).json({ username, email });
+
+    const newUser = new User({ username, email });
+    await newUser.save();
+
+    res.status(201).json({ username: newUser.username, email: newUser.email });
   } catch (error) {
-    res.status(500).send('Error al crear usuario');
+    res.status(500).json({ message: 'Error al crear usuario', error: error.message });
   }
 };
 
@@ -40,30 +42,31 @@ exports.updateUser = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       id,
       { username, email },
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updatedUser) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    res.status(200).json({ username, email });
+    res.status(200).json({ username: updatedUser.username, email: updatedUser.email });
   } catch (error) {
-    res.status(500).send('Error al actualizar usuario', error);
+    res.status(500).json({ message: 'Error al actualizar usuario', error: error.message });
   }
 };
 
 // Ver un usuario por ID
 exports.showUser = async (req, res) => {
   const { id } = req.params;
+  
   try {
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).send('Usuario no encontrado');
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).send('Error al obtener usuario');
+    res.status(500).json({ message: 'Error al obtener usuario', error: error.message });
   }
 };
 
@@ -80,7 +83,6 @@ exports.deleteUser = async (req, res) => {
 
     res.status(204).send(); // No hay contenido que devolver
   } catch (error) {
-    res.status(500).json({ message: 'Error al eliminar usuario' }); // Enviar mensaje de error
+    res.status(500).json({ message: 'Error al eliminar usuario', error: error.message });
   }
 };
-
