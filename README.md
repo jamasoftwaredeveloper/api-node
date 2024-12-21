@@ -1,5 +1,6 @@
 
 Información del proyecto
+
 Este proyecto consiste en una API RESTful desarrollada con Node.js y Express que permite la gestión de usuarios. Los usuarios pueden crear, leer, actualizar y eliminar usuarios(CRUD) a través de endpoints bien definidos. El objetivo principal de este proyecto es practicar y demostrar mis conocimientos en Node.js, así como implementar buenas prácticas en el desarrollo de aplicaciones web.
 Este proyecto consiste en una API RESTful desarrollada con Node.js y Express que permite la gestión de usuarios. Los usuarios pueden crear, leer, actualizar y eliminar usuarios(CRUD) a través de endpoints bien definidos. El objetivo principal de este proyecto es practicar y demostrar mis conocimientos en Node.js, así como implementar buenas prácticas en el desarrollo de aplicaciones web.
 Aptitudes: Node.js · MongoDB · Patrón repository · Docker · Jest · Automatización de pruebas · Swagger UI · Buenas practicas · Validaciones · Middlewares · Control de log
